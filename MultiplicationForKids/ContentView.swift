@@ -24,10 +24,11 @@ struct RandomColorBoxText: View {
 }
 
 struct TestView: View {
+    @Environment(\.dismiss) var dismiss
     @State private var currentQuestion = 1
     @State private var score = 0
     @State private var multiplicand = Int.random(in: 2...12)
-    @State private var answer = 0
+    @State private var answer: Int? = nil
     
     @State private var showAlert = false
 
@@ -76,10 +77,12 @@ struct TestView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             .padding(30)
-        }.alert("Congrats", isPresented: $showAlert) {
+        }.alert("Good Job", isPresented: $showAlert) {
             Button("OK") {
-                
+                dismiss()
             }
+        } message: {
+            Text("Your score was \(score)/\(numberOfQuestions).")
         }
     }
     
@@ -88,6 +91,7 @@ struct TestView: View {
         if (result == answer) {
             score += 1
         }
+
         if (currentQuestion >= numberOfQuestions) {
             showAlert = true
         } else {
@@ -97,6 +101,7 @@ struct TestView: View {
     }
     
     func nextQuestion() {
+        answer = nil
         multiplicand = Int.random(in: 2...12)
     }
 }
